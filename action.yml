@@ -23,6 +23,13 @@ inputs:
     description: Treat warnings as failures.
     required: false
     default: 'false'
+  merge:
+    description: >
+      Also run the merge rules, which judge a pull request checked out merged
+      into the configured branch against that branch. Needs an archdoc release
+      that has lint --merge.
+    required: false
+    default: 'false'
 
 outputs:
   findings:
@@ -60,6 +67,7 @@ runs:
       env:
         ARCHDOC_PATH: ${{ inputs.path }}
         STRICT: ${{ inputs.strict-warnings }}
+        MERGE: ${{ inputs.merge }}
       run: |
         set -uo pipefail
 
@@ -90,11 +98,14 @@ runs:
         esac
 
         findings="$RUNNER_TEMP/archdoc-findings.json"
+        flags=(--json)
         if [ "$STRICT" = "true" ]; then
-          archdoc -C "$ARCHDOC_PATH" lint --json --strict-warnings > "$findings"
-        else
-          archdoc -C "$ARCHDOC_PATH" lint --json > "$findings"
+          flags+=(--strict-warnings)
         fi
+        if [ "$MERGE" = "true" ]; then
+          flags+=(--merge)
+        fi
+        archdoc -C "$ARCHDOC_PATH" lint "${flags[@]}" > "$findings"
         status=$?
 
         # Exit 1 is a usage or validation failure, which printed a message
