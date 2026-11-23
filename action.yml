@@ -26,8 +26,8 @@ inputs:
   merge:
     description: >
       Also run the merge rules, which judge a pull request checked out merged
-      into the configured branch against that branch. Needs an archdoc release
-      that has lint --merge.
+      into the configured branch against that branch. Needs archdoc v0.6.0 or
+      later, the first release with lint --merge.
     required: false
     default: 'false'
 

@@ -35,6 +35,31 @@ jobs:
           echo "findings=${{ steps.clean.outputs.findings }}"
           [ "${{ steps.clean.outputs.findings }}" = "0" ]
 
+  # The merge input reaches a release that accepts it. No merge rule fires
+  # here: that needs a pull request's merge commit carrying a fault, and
+  # archdoc's own suite tests each merge rule against real git repositories.
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: The merge rules on a repository that lints clean
+        id: merge
+        uses: ./
+        with:
+          path: fixtures/clean
+          version: v0.6.0
+          merge: true
+
+      - name: It found nothing
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "findings=${{ steps.merge.outputs.findings }}"
+          [ "${{ steps.merge.outputs.findings }}" = "0" ]
+
   # The half that matters: a repository with faults has to fail the job and
   # annotate, not pass quietly.
   findings:
