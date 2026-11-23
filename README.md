@@ -33,7 +33,7 @@ annotation would land on a file that does not exist. The action reads
 | `version` | *(empty)* | The archdoc release to use |
 | `path` | `.` | The directory to run in, as `archdoc -C` takes it |
 | `strict-warnings` | `false` | Treat warnings as failures |
-| `merge` | `false` | Also run the merge rules, judging a pull request against the branch it merges into |
+| `merge` | `false` | Also run the merge rules, judging a pull request against the branch it merges into. Needs archdoc v0.6.0 or later |
 
 Left empty, `version` uses whatever `archdoc` is already on `PATH` and
 installs the latest release only if there is none. Given a value, that release
